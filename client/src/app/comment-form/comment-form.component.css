@@ -1,0 +1,39 @@
+.form-container {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+.form-container input,
+textarea {
+  width: 400px;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 4px;
+  border: 1px solid gray;
+}
+.form-container textarea {
+  height: 100px;
+}
+.form-container button {
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  padding: 10px;
+  margin: 0 10px;
+  min-width: 100px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  border-radius: 8px;
+}
+.form-container .save {
+  background: rgba(8, 123, 84, 0.927);
+}
+
+.form-container .cancel {
+  background: rgba(48, 51, 238, 0.927);
+}
+
+.form-container button:hover {
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+}

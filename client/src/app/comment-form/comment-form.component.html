@@ -1,0 +1,14 @@
+<div class="form-container">
+    <form (ngSubmit)="onSave()">
+        <div>
+            <input type="text" id="author" [(ngModel)]="comment.author" name="author" placeholder="Author's name"
+                required>
+        </div>
+        <div>
+            <textarea id="content" [(ngModel)]="comment.content" name="content" placeholder="Comment"
+                required></textarea>
+        </div>
+        <button class="save" type="submit">Save</button>
+        <button class="cancel" type="button" (click)="onCancel()">Cancel</button>
+    </form>
+</div>

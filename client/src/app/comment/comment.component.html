@@ -1,0 +1,18 @@
+<div class="comment-container">
+    <ul>
+        <li class="comment-content" *ngFor="let comment of comments">
+            <div class="author"><span class="avatar"></span>{{comment.author}}<i>{{comment.updatedAt |
+                    date:'MM-dd-yyyy h:mm a'}}</i>
+            </div>
+            <div class="content">{{ comment.content }}</div>
+            <div class="controls">
+                <button (click)="editComment(comment)">Edit</button>
+                <button (click)="deleteComment(comment)">Delete</button>
+            </div>
+        </li>
+    </ul>
+    <div class="add-comment">
+        <app-comment-form [comment]="selectedComment" (commentCancelled)="cancelComment()"
+            (commentSaved)="saveComment($event)"></app-comment-form>
+    </div>
+</div>
