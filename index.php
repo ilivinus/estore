@@ -1,2 +1,2 @@
 <?php
-include_once "./client/dist/index.html";
+include_once "./public/index.html";

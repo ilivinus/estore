@@ -1,33 +1,33 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Comment } from '../types';
+import { API_URL, Comment } from '../types';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommentService {
-  private API_URL = 'http://localhost:8000/comments.php';
+  private url = `${API_URL}/comments.php`;
 
   constructor(private http: HttpClient) {}
 
   getComments(productId: number): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`${this.API_URL}?id=${productId}`);
+    return this.http.get<Comment[]>(`${this.url}?id=${productId}`);
   }
 
   getCommentById(id: number): Observable<Comment> {
-    return this.http.get<Comment>(`${this.API_URL}?id=${id}`);
+    return this.http.get<Comment>(`${this.url}?id=${id}`);
   }
 
   addComment(comment: Comment): Observable<Comment> {
-    return this.http.post<Comment>(this.API_URL, comment);
+    return this.http.post<Comment>(this.url, comment);
   }
 
   updateComment(comment: Comment): Observable<Comment> {
-    return this.http.put<Comment>(`${this.API_URL}?id=${comment.id}`, comment);
+    return this.http.put<Comment>(`${this.url}?id=${comment.id}`, comment);
   }
 
   deleteComment(id?: number): Observable<Comment> {
-    return this.http.delete<Comment>(`${this.API_URL}?id=${id}`);
+    return this.http.delete<Comment>(`${this.url}?id=${id}`);
   }
 }

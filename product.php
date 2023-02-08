@@ -19,8 +19,8 @@ function handleGetRequest()
 {
     try {
         global $pdo;
-        $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT) ?? 1;
-        $limit = filter_input(INPUT_GET, 'limit', FILTER_VALIDATE_INT) ?? 10;
+        $page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? intval($_GET['page']) : 1;
+        $limit = (isset($_GET['limit']) && is_numeric($_GET['limit'])) ? intval($_GET['limit']) : 10;
 
         $offset = ($page - 1) * $limit;
 

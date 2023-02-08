@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ProductDetailComponent } from './product-detail.component';
 
 import { CommentModule } from '../comment/comment.module';
-import { CommentComponent } from '../comment/comment.component';
 
 @NgModule({
   declarations: [ProductDetailComponent],

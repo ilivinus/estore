@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { API_URL } from '../types';
 
 @Component({
   selector: 'app-product',
@@ -19,7 +20,7 @@ export class ProductComponent implements OnInit {
 
   loadMore() {
     this.http
-      .get(`http://localhost:8000/product.php?page=${this.page}`)
+      .get(`${API_URL}/product.php?page=${this.page}`)
       .subscribe((res) => {
         this.products = this.products.concat(res);
 

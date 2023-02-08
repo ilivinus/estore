@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build && node script.js && npm run mov",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "mov": "rm -r ../public/* && cp ./dist/* ../public"
   },
   "private": true,
   "dependencies": {

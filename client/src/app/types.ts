@@ -15,3 +15,5 @@ export interface Product {
   image: string;
   comments: number;
 }
+
+export const API_URL = 'http://www.wiu.edu/users/productlist';
