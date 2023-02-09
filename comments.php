@@ -28,15 +28,22 @@ switch ($method) {
 function handleGetRequest()
 {
     try {
-        global $pdo;
+        global $dblink;
         $id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
 
-        $query = 'SELECT * FROM comment WHERE productId = :id';
-        $stmt = $pdo->prepare($query);
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $query = 'SELECT * FROM comment WHERE productId = ' . $id;
+        $result = mysql_query($query, $dblink);
+        if (!$result) {
+            http_response_code(500);
+            echo json_encode(["error" => mysql_error()]);
+            exit;
+        }
 
+        $comments = array();
+        while ($row = mysql_fetch_assoc($result)) {
+            $comments[] = $row;
+        }
+        mysql_free_result($result);
         http_response_code(200);
         echo json_encode($comments);
     } catch (PDOException $e) {
@@ -50,7 +57,7 @@ function handleGetRequest()
 function handlePostRequest()
 {
     try {
-        global $pdo;
+        global $dblink;
 
         // Validate inputs
         $author = filter_input(INPUT_POST, "author", FILTER_SANITIZE_STRING);
@@ -65,12 +72,16 @@ function handlePostRequest()
         }
 
         // Insert the comment
-        $stmt = $pdo->prepare("INSERT INTO comment (author, content, createdAt,updatedAt, productId) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$author, $content, date('Y-m-d H:i:s'), date('Y-m-d H:i:s'), $productId]);
-
+        // $stmt = $pdo->prepare("INSERT INTO comment (author, content, createdAt,updatedAt, productId) VALUES (?, ?, ?, ?, ?)");
+        // $stmt->execute([$author, $content, date('Y-m-d H:i:s'), date('Y-m-d H:i:s'), $productId]);
+        $query = "INSERT INTO comment (author, content, createdAt, updatedAt, productId) VALUES ('$author', '$content', date('Y-m-d H:i:s'), date('Y-m-d H:i:s'), '$productId')";
+        $result = mysql_query($query, $dblink);
+        if (!$result) {
+            throw new Exception("Failed to insert");
+        }
         http_response_code(201);
         echo json_encode(["message" => "Comment added"]);
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         http_response_code(500);
         echo json_encode(["error" => $e->getMessage()]);
         return;
@@ -81,7 +92,7 @@ function handlePostRequest()
 function handlePutRequest()
 {
     try {
-        global $pdo;
+        global $dblink;
 
         // Validate inputs
         $id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
@@ -96,26 +107,19 @@ function handlePutRequest()
             echo json_encode(['error' => 'Invalid data provided']);
             return;
         }
-        // Update the comment in the database
-        $query = 'UPDATE comment SET author = :author, content = :content, updatedAt = :updatedAt, productId = :productId WHERE id = :id';
-        $statement = $pdo->prepare($query);
-        $statement->bindValue(':author', $author, PDO::PARAM_STR);
-        $statement->bindValue(':content', $content, PDO::PARAM_STR);
-        $statement->bindValue(':updatedAt', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-        $statement->bindValue(':productId', $productId, PDO::PARAM_INT);
-        $statement->bindValue(':id', $id, PDO::PARAM_INT);
-        $statement->execute();
 
-        // Return the updated comment
-        $query = 'SELECT * FROM comment WHERE id = :id';
-        $statement = $pdo->prepare($query);
-        $statement->bindValue(':id', $id, PDO::PARAM_INT);
-        $statement->execute();
-        $comment = $statement->fetch(PDO::FETCH_ASSOC);
+        $query = "UPDATE comment SET author = '$author', content = '$content', updatedAt = '" . date('Y-m-d H:i:s') . "', productId = '$productId' WHERE id = '$id'";
+        $result = mysql_query($query, $dblink);
+        if (!$result) {
+            throw new Exception("Insertion failed");
+        }
+        $query = "SELECT * FROM comment WHERE id = '$id'";
+        $result = mysql_query($query, $dblink);
+        $comment = mysql_fetch_assoc($result);
 
-        if ($comment === false) {
+        if (!$comment) {
             http_response_code(404);
-            echo json_encode(['error' => 'Comment not found']);
+            echo json_encode(array('error' => 'Comment not found'));
             return;
         }
 
@@ -131,24 +135,25 @@ function handlePutRequest()
 function handleDeleteRequest()
 {
     try {
-        global $pdo;
+        global $dblink;
 
         // Delete the comment from the database
         $id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
-        $query = 'DELETE FROM comment WHERE id = :id';
-        $statement = $pdo->prepare($query);
-        $statement->bindValue(':id', $id, PDO::PARAM_INT);
-        $statement->execute();
-
-        // Check if the comment was deleted
-        if ($statement->rowCount() === 0) {
-            http_response_code(404);
-            echo json_encode(['error' => 'Comment not found']);
-            return;
+        $query = "DELETE FROM comment WHERE id = $id";
+        $delresult =  mysql_query($query, $dblink);
+        if (!$delresult) {
+            throw new Exception("Deletion failed");
         }
 
+        // Check if the comment was deleted
+        $result = mysql_query("SELECT * FROM comment WHERE id = $id", $dblink);
+        if (mysql_num_rows($result) == 0) {
+            http_response_code(404);
+            echo json_encode(array('error' => 'Comment not found'));
+            return;
+        }
         http_response_code(204);
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         http_response_code(500);
         echo json_encode(["error" => $e->getMessage()]);
         return;

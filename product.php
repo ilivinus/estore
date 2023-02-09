@@ -18,22 +18,23 @@ switch ($method) {
 function handleGetRequest()
 {
     try {
-        global $pdo;
+        global $dblink;
         $page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? intval($_GET['page']) : 1;
         $limit = (isset($_GET['limit']) && is_numeric($_GET['limit'])) ? intval($_GET['limit']) : 10;
 
         $offset = ($page - 1) * $limit;
 
-        $stmt = $pdo->prepare("SELECT product.*, (SELECT COUNT(*) FROM comment WHERE comment.productId = product.id) AS comments FROM product LIMIT :offset, :limit");
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $stmt->execute();
+        $query = "SELECT product.*, (SELECT COUNT(*) FROM comment WHERE comment.productId = product.id) AS comments FROM product LIMIT $offset, $limit";
+        $result = mysql_query($query, $dblink);
+        $products = array();
+        while ($row = mysql_fetch_assoc($result)) {
+            $products[] = $row;
+        }
 
-        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+        mysql_free_result($result);
         header('Content-Type: application/json');
         echo json_encode($products);
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         http_response_code(500);
         echo json_encode(["error" => $e->getMessage()]);
         return;

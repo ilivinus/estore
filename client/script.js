@@ -1,7 +1,7 @@
 const fs = require("fs");
 const html = fs.readFileSync("./dist/index.html").toLocaleString();
 
-const prefix = "./users/liu100/productlist/public/";
+const prefix = "./";
 const search = /<base href=["']([^"']+)["']/g;
 
 const updatedHtml = html.replace(search, (match, p1) => {

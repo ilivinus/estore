@@ -6,13 +6,11 @@ $dbPassword = $_ENV['DATABASE_PASSWORD'];
 $dbName = $_ENV['DATABASE_NAME'];
 $dbPort = $_ENV['DATABASE_PORT'];
 
-$dsn = "mysql:host=" . $dbhost . ";dbname=" . $dbName . ";port=" . $dbPort;
-
-try {
-    $pdo = new PDO($dsn, $dbUser, $dbPassword);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
+$dblink = mysql_connect($dbHost . ":" . $dbPort, $dbUser, $dbPassword);
+if (!$dblink) {
     http_response_code(500);
-    echo json_encode(["error" => $e->getMessage()]);
+    echo json_encode(["error" => mysql_error()]);
     exit;
 }
+
+mysql_select_db($dbName, $dblink);

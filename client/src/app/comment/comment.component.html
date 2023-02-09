@@ -15,4 +15,5 @@
         <app-comment-form [comment]="selectedComment" (commentCancelled)="cancelComment()"
             (commentSaved)="saveComment($event)"></app-comment-form>
     </div>
+    <app-alert [type]="msgType" [message]="message"></app-alert>
 </div>

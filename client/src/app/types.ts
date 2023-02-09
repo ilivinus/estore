@@ -16,4 +16,4 @@ export interface Product {
   comments: number;
 }
 
-export const API_URL = 'http://www.wiu.edu/users/productlist';
+export const API_URL = 'http://www.wiu.edu/users/liu100/productlist';
