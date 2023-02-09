@@ -28,6 +28,19 @@
     "main"
     "footer";
 }
+@media (max-width: 700px) {
+  .feature-detail {
+    width: 80%;
+  }
+  .feature-image {
+    width: 90%;
+    margin-right: 0;
+  }
+  .card {
+    width: 100%;
+    flex-direction: column;
+  }
+}
 .comment-price {
   display: flex;
   flex-direction: column;
