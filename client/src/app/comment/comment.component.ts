@@ -48,7 +48,7 @@ export class CommentComponent implements OnInit {
         this.msgType = 'success';
       },
       (error) => {
-        this.message = error.error;
+        this.message = error?.error?.error;
         this.msgType = 'danger';
       }
     );
@@ -67,7 +67,7 @@ export class CommentComponent implements OnInit {
           this.msgType = 'success';
         },
         (error) => {
-          this.message = error.error;
+          this.message = error?.error?.error;
           this.msgType = 'danger';
         }
       );
@@ -81,8 +81,7 @@ export class CommentComponent implements OnInit {
           this.msgType = 'success';
         },
         (error) => {
-          console.log(error);
-          this.message = error.error;
+          this.message = error?.error?.error;
           this.msgType = 'danger';
         }
       );

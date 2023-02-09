@@ -1,8 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, Observable } from 'rxjs';
-import { CommentComponent } from '../comment/comment.component';
+import { map } from 'rxjs';
 import { Product } from '../types';
 
 @Component({
